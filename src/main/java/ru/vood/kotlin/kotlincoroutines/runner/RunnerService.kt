@@ -1,30 +1,19 @@
 package ru.vood.kotlin.kotlincoroutines.runner
 
-
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.core.annotation.Order
+import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Service
-import ru.vood.kotlin.kotlincoroutines.extension.TooMatchDelay
+import ru.vood.kotlin.kotlincoroutines.chain.Chain
+import ru.vood.kotlin.kotlincoroutines.chain.SimpleCoroutine
 
 @Service
-@Order(10)
-class RunnerService(private val tooMatchDelay: TooMatchDelay) : Chain {
-
-    var logger: Logger = LoggerFactory.getLogger(RunnerService::class.java)
-
-    override fun run() {
-        runBlocking { // this: CoroutineScope
-            var someWork = ""
-            val launch = launch { // launch a new coroutine in the scope of runBlocking
-                someWork = tooMatchDelay.someWork()
-                logger.debug("World!")
-            }
-            logger.debug("Hello")
-            logger.debug(someWork)
+class RunnerService(val chain: List<Chain>): CommandLineRunner {
+    var logger: Logger = LoggerFactory.getLogger(SimpleCoroutine::class.java)
+    override fun run(vararg args: String?) {
+        chain.forEach {
+            logger.info("==Пример имплементированный в ${it.javaClass}==")
+            it.run()
         }
     }
-
 }
