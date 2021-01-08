@@ -5,7 +5,6 @@
 // This file was automatically generated from exception-handling.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.exampleExceptions05
 
-import kotlinx.coroutines.exceptions.*
 
 import kotlinx.coroutines.*
 import java.io.*
