@@ -10,9 +10,9 @@ class TooMatchDelay {
     var logger: Logger = LoggerFactory.getLogger(TooMatchDelay::class.java)
 
     fun someWork(): String {
-        logger.debug("start")
-        sleep(5000)
-        logger.debug("end")
+        logger.info("start")
+        sleep(1000)
+        logger.info("end")
         return "asdasd"
     }
 }

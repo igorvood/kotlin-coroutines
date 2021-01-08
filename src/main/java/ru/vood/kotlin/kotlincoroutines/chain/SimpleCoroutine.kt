@@ -2,6 +2,7 @@ package ru.vood.kotlin.kotlincoroutines.chain
 
 
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -18,7 +19,7 @@ class SimpleCoroutine(private val tooMatchDelay: TooMatchDelay) : Chain {
     override fun run() {
         runBlocking { // this: CoroutineScope
             var someWork = ""
-            val launch = launch { // launch a new coroutine in the scope of runBlocking
+            launch(newSingleThreadContext("MyOwnThread")) { // launch a new coroutine in the scope of runBlocking
                 someWork = tooMatchDelay.someWork()
                 logger.info("World!")
             }
