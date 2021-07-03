@@ -7,5 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 open class KotlinCoroutinesApplication {
 }
 fun main(args: Array<String>) {
+    System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
     SpringApplication.run(KotlinCoroutinesApplication::class.java, *args)
 }
