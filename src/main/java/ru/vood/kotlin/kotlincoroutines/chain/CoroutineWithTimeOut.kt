@@ -1,6 +1,5 @@
 package ru.vood.kotlin.kotlincoroutines.chain
 
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
@@ -25,7 +24,7 @@ class CoroutineWithTimeOut(private val tooMatchDelay: TooMatchDelay) : Chain {
                 logger.info("Hello")
                 logger.info(someWork)
             }
-        } catch (e : Throwable){
+        } catch (e: Throwable) {
             logger.info(e.message)
         }
     }
