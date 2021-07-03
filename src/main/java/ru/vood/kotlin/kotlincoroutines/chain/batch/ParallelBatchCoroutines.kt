@@ -1,28 +1,23 @@
 package ru.vood.kotlin.kotlincoroutines.chain.batch
 
 
+import kotlinx.coroutines.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Service
 import ru.vood.kotlin.kotlincoroutines.chain.Chain
-import java.lang.Thread.sleep
 import java.time.Duration
 import java.time.LocalDateTime
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ForkJoinPool
-
-
-
 
 @Service
 @Order(40)
-class ParalellBatch_4 : Chain {
-    private val logger: Logger = LoggerFactory.getLogger(ParalellBatch_4::class.java)
+class ParallelBatchCoroutines : Chain {
+    private val logger: Logger = LoggerFactory.getLogger(ParallelBatchCoroutines::class.java)
     val batchTrgs = listOf(
-        (1..10000).map { q -> Trigger(q.toString()) }.toSet(),
-        (11000..20000).map { q -> Trigger(q.toString()) }.toSet(),
-        (21000..30000).map { q -> Trigger(q.toString()) }.toSet()
+        (1..100).map { q -> Trigger(q.toString()) }.toSet(),
+        (110..200).map { q -> Trigger(q.toString()) }.toSet(),
+        (210..300).map { q -> Trigger(q.toString()) }.toSet()
     )
 
 
@@ -37,23 +32,21 @@ class ParalellBatch_4 : Chain {
 
     }
 
+    val job = SupervisorJob()
+    val scope = CoroutineScope(Dispatchers.IO)
+
     fun r() {
         batchTrgs.forEach { setTrg ->
-            runSet(setTrg)
+            runBlocking { launch { runSet(setTrg) } }
         }
+
     }
 
-    fun runSet(setTrg: Set<Trigger>) {
-        val pool = ForkJoinPool(10)
-        val toList = setTrg.map {
-            val supplyAsync: CompletableFuture<String> = CompletableFuture.supplyAsync { runTrg(it, logger) }
-            supplyAsync
-        }.toList()
-
-        pool.submit{}
-
-        toList.forEach { q -> q.join() }
-
+    suspend fun runSet(setTrg: Set<Trigger>) = coroutineScope {
+        setTrg.map {
+//            launch(Dispatchers.IO) { runTrg(it, logger) }
+            scope.launch { runTrg(it, logger) }
+        }.forEach { it.join() }
 
         logger.info("========================== $setTrg")
     }

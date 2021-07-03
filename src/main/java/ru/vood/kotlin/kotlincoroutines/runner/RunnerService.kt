@@ -12,7 +12,8 @@ import ru.vood.kotlin.kotlincoroutines.chain.SimpleCoroutine
 @Service
 class RunnerService(val chain: List<Chain>): CommandLineRunner {
     @Autowired
-    @Qualifier("paralellBatch_3")
+    @Qualifier("parallelBatchCoroutines")
+//    @Qualifier("parallelBatchCompletableFuture")
     lateinit var paralellBatch: Chain
 
     var logger: Logger = LoggerFactory.getLogger(SimpleCoroutine::class.java)
