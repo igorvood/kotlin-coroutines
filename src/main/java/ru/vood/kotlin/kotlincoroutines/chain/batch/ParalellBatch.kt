@@ -1,4 +1,4 @@
-package ru.vood.kotlin.kotlincoroutines.chain
+package ru.vood.kotlin.kotlincoroutines.chain.batch
 
 
 import kotlinx.coroutines.Deferred
@@ -9,6 +9,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Service
+import ru.vood.kotlin.kotlincoroutines.chain.Chain
 import java.lang.Thread.sleep
 
 @Service
@@ -74,7 +75,5 @@ class ParalellBatch : Chain {
         return trg.id
     }
 
-
-    data class Trigger(val id: String)
 
 }

@@ -1,10 +1,11 @@
-package ru.vood.kotlin.kotlincoroutines.chain
+package ru.vood.kotlin.kotlincoroutines.chain.batch
 
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Service
+import ru.vood.kotlin.kotlincoroutines.chain.Chain
 import java.lang.Thread.sleep
 import java.time.Duration
 import java.time.LocalDateTime
@@ -45,7 +46,7 @@ class ParalellBatch_4 : Chain {
     fun runSet(setTrg: Set<Trigger>) {
         val pool = ForkJoinPool(10)
         val toList = setTrg.map {
-            val supplyAsync: CompletableFuture<String> = CompletableFuture.supplyAsync { runTrg(it) }
+            val supplyAsync: CompletableFuture<String> = CompletableFuture.supplyAsync { runTrg(it, logger) }
             supplyAsync
         }.toList()
 
@@ -57,14 +58,5 @@ class ParalellBatch_4 : Chain {
         logger.info("========================== $setTrg")
     }
 
-    fun runTrg(trg: Trigger): String {
-        logger.info("begin $trg")
-        sleep(1000)
-        logger.info("end $trg")
-        return trg.id
-    }
-
-
-    data class Trigger(val id: String)
 
 }

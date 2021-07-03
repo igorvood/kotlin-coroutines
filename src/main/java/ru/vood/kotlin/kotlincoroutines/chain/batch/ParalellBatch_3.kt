@@ -1,12 +1,12 @@
-package ru.vood.kotlin.kotlincoroutines.chain
+package ru.vood.kotlin.kotlincoroutines.chain.batch
 
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.GlobalScope.coroutineContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Service
+import ru.vood.kotlin.kotlincoroutines.chain.Chain
 import java.lang.Thread.sleep
 import java.time.Duration
 import java.time.LocalDateTime
@@ -33,7 +33,7 @@ class ParalellBatch_3 : Chain {
 
     }
     val job = SupervisorJob()
-    val scope = CoroutineScope(Dispatchers.Default + job)
+    val scope = CoroutineScope(Dispatchers.IO)
 
     fun r() {
         batchTrgs.forEach { setTrg ->
@@ -43,20 +43,11 @@ class ParalellBatch_3 : Chain {
 
     suspend fun runSet(setTrg: Set<Trigger>) = coroutineScope{
          setTrg.map {
-            launch(Dispatchers.IO) { runTrg(it) }
+             scope.async { runTrg(it, logger) }
         }.forEach { it.join() }
 
         logger.info("========================== $setTrg")
     }
 
-     fun runTrg(trg: Trigger): String   {
-        logger.info("begin $trg")
-        sleep(1000)
-        logger.info("end $trg")
-        return trg.id
-    }
-
-
-    data class Trigger(val id: String)
 
 }

@@ -1,12 +1,12 @@
-package ru.vood.kotlin.kotlincoroutines.chain
+package ru.vood.kotlin.kotlincoroutines.chain.batch
 
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.GlobalScope.coroutineContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Service
+import ru.vood.kotlin.kotlincoroutines.chain.Chain
 import java.lang.Thread.sleep
 
 @Service
@@ -33,7 +33,7 @@ class ParalellBatch_2 : Chain {
                 setTrg.map { trg ->
 
                     async<String> {
-                        runTrg(trg)
+                        runTrg(trg, logger)
                     }
                 }
                     .toList()
@@ -63,9 +63,9 @@ class ParalellBatch_2 : Chain {
 */
 
         logger.info("1")
-        val async = launch(Dispatchers.IO) { runTrg(toList[0]) }
+        val async = launch(Dispatchers.IO) { runTrg(toList[0], logger) }
         logger.info("2")
-        val async1 = launch { runTrg(toList[1]) }
+        val async1 = launch { runTrg(toList[1], logger) }
         logger.info("3")
         async.join()
         logger.info("4")
@@ -80,14 +80,5 @@ class ParalellBatch_2 : Chain {
         logger.info("========================== $setTrg")
     }
 
-     fun runTrg(trg: Trigger): String   {
-        logger.info("begin $trg")
-        sleep(1000)
-        logger.info("end $trg")
-        return trg.id
-    }
-
-
-    data class Trigger(val id: String)
 
 }
