@@ -44,8 +44,8 @@ class ParallelBatchCoroutines : Chain {
 
     suspend fun runSet(setTrg: Set<Trigger>) = coroutineScope {
         setTrg.map {
-//            launch(Dispatchers.IO) { runTrg(it, logger) }
-            scope.launch { runTrg(it, logger) }
+            launch(Dispatchers.IO) { runTrg(it, logger) }
+//            scope.launch { runTrg(it, logger) }
         }.forEach { it.join() }
 
         logger.info("========================== $setTrg")

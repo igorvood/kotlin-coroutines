@@ -18,11 +18,11 @@ class RunnerService(val chain: List<Chain>): CommandLineRunner {
 
     var logger: Logger = LoggerFactory.getLogger(SimpleCoroutine::class.java)
     override fun run(vararg args: String?) {
-     /*   chain.forEach {
+        chain.forEach {
             logger.info("==Пример имплементированный в ${it.javaClass}==")
             it.run()
-        }*/
+        }
 
-        paralellBatch.run()
+//        paralellBatch.run()
     }
 }
